@@ -1,9 +1,9 @@
 import pandas as pd
-from SQLAlchemy import String, TEXT, INTEGER, Float, DECIMAL
+from sqlalchemy import create_engine, String , TEXT, INTEGER, Float, DECIMAL, BIGINT
 
 #reading the data from the link
-url = 'https://opendata.rhein-kreis-neuss.de/api/v2/catalog/datasets/rhein-kreis-neuss-flughafen-weltweit/exports/csv'
-df = pd.read_csv(url)
+url='https://opendata.rhein-kreis-neuss.de/api/v2/catalog/datasets/rhein-kreis-neuss-flughafen-weltweit/exports/csv'
+df = pd.read_csv(url,sep=";", on_bad_lines='skip')
 
 #df.head(3)
 
@@ -21,7 +21,7 @@ columnTypes = {'column_1': INTEGER,
                'column_12': String, 
                'geo_punkt': DECIMAL}
 
-# saving table in sqlite
+# saving the table in sqlite database
 df.to_sql('airports','sqlite:///airports.sqlite', if_exists='replace', index=False)
 
 
