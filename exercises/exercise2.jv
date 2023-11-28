@@ -1,3 +1,11 @@
+
+// declearing the regex contraint
+constraint IFOPT_Format oftype RegexConstraint {
+  regex: /[a-zA-Z]{2}:\d+:\d+(:\d+)?(:\d+)?/;
+}
+
+// declearing the value type
+
 valuetype VerkehrList oftype text {
 	constraints: [ VerkehrAllowList];
 }
@@ -22,14 +30,15 @@ valuetype IFOPT oftype text {
     constraints: [ IFOPT_Format];
 }
 
-
-constraint IFOPT_Format oftype RegexConstraint {
-  regex: /[a-z]{2}:\d+:\d+(:\d+)?(:\d+)?/;
-}
-
-
+// creating the pipeline
 
 pipeline TrainPipeline {
+
+    TrainPipelineExtractor
+    -> TrainPipelineTextFileInterpreter
+    -> TrainPipelineCSVInterpreter
+    -> TrainPipelineTableInterpreter
+    -> DatabaseLoader;
 
     block TrainPipelineExtractor  oftype HttpExtractor {
         url: "https://download-data.deutschebahn.com/static/datasets/haltestellen/D_Bahnhof_2020_alle.CSV";
@@ -53,12 +62,8 @@ pipeline TrainPipeline {
 			"Betreiber_Nr" oftype integer
 		];
 	}
-	// DATABASE
+	
 	block DatabaseLoader oftype SQLiteLoader {table: "trainstops"; file: "trainstops.sqlite";}
 
-    TrainPipelineExtractor
-        -> TrainPipelineTextFileInterpreter
-        -> TrainPipelineCSVInterpreter
-        -> TrainPipelineTableInterpreter
-        -> DatabaseLoader;
+
 }
