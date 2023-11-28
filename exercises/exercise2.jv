@@ -1,33 +1,33 @@
 
 // declearing the regex contraint
-constraint IFOPT_Format oftype RegexConstraint {
+constraint IFOPT_For_Format oftype RegexConstraint {
   regex: /[a-zA-Z]{2}:\d+:\d+(:\d+)?(:\d+)?/;
 }
 
 // declearing the value type
 
-valuetype VerkehrList oftype text {
-	constraints: [ VerkehrAllowList];
+valuetype VerkehrType oftype text {
+	constraints: [ VerkehrAllowListType];
 }
 
-constraint VerkehrAllowList oftype AllowlistConstraint {
+constraint VerkehrAllowListType oftype AllowlistConstraint {
   allowlist: ["FV", "RV", "nur DPN"];
 }
 
-valuetype Coordinate oftype decimal {
+valuetype CoOrdinates oftype decimal {
     constraints: [
-        CoordinateRange,
+        CoOrdinatesRange,
     ];
 }
 
-constraint CoordinateRange oftype RangeConstraint {
+constraint CoOrdinatesRange oftype RangeConstraint {
   lowerBound: 0;
   upperBound: 90;
 }
 
 
-valuetype IFOPT oftype text {
-    constraints: [ IFOPT_Format];
+valuetype IFOPT_For oftype text {
+    constraints: [ IFOPT_For_Format];
 }
 
 // creating the pipeline
@@ -53,11 +53,11 @@ pipeline TrainPipeline {
         columns: [
 			"EVA_NR" oftype integer,
 			"DS100" oftype text,
-			"IFOPT" oftype IFOPT,
+			"IFOPT_For" oftype IFOPT_For,
 			"NAME" oftype text,
-			"Verkehr" oftype VerkehrList,
-			"Laenge" oftype Coordinate,
-			"Breite" oftype Coordinate,
+			"Verkehr" oftype VerkehrType,
+			"Laenge" oftype CoOrdinates,
+			"Breite" oftype CoOrdinates,
 			"Betreiber_Name" oftype text,
 			"Betreiber_Nr" oftype integer
 		];
